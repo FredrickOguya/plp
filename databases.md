@@ -1,6 +1,15 @@
+
+--creating the hospital_db database--
+
+CREATE DATABASE `hospital_db`;
+
+--selecting using the USE keyword--
+
+USE `hospital_db`;
+
 --creating patients table--
 
-CREATE TABLE `hospital_db`.`patients` (
+CREATE TABLE `patients` (
   `patient_id` INT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(50) NOT NULL,
   `last_name` VARCHAR(45) NULL,
@@ -10,9 +19,10 @@ CREATE TABLE `hospital_db`.`patients` (
   PRIMARY KEY (`patient_id`),
   UNIQUE INDEX `patient_id_UNIQUE` (`patient_id` ASC) VISIBLE);
 
+
   --creating providers table--
 
-  CREATE TABLE `hospital_db`.`providers` (
+  CREATE TABLE `providers` (
   `provider_id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
@@ -24,10 +34,8 @@ CREATE TABLE `hospital_db`.`patients` (
 
   --creating visits table--
 
-  CREATE TABLE `hospital_db`.`visits` (
+  CREATE TABLE `visits` (
   `visit_id` INT NOT NULL AUTO_INCREMENT,
-  `patient_id` VARCHAR(45) NULL,
-  `provider_id` INT NULL,
   `date_of_visit` DATE NOT NULL,
   `date_scheduled` DATE NOT NULL,
   `visit_department_id` INT NOT NULL,
@@ -37,36 +45,41 @@ CREATE TABLE `hospital_db`.`patients` (
   `pulse` DECIMAL(10) NULL,
   `visit_status` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`visit_id`),
+  FOREIGN KEY (`patient_id`) REFERENCE `patients` (`patient_id`),
+  FOREIGN KEY (`provider_id`) REFERENCE `providers` (`provider_id`),
   UNIQUE INDEX `patient_id_UNIQUE` (`patient_id` ASC) VISIBLE);
 
-  --creating visits table--
+  --creating ed_visits table--
 
-  CREATE TABLE `hospital_db`.`ed_visits_table` (
+  CREATE TABLE `ed_visits_table` (
   `ed_visits_id` INT NOT NULL AUTO_INCREMENT,
-  `visit_id` INT NULL,
-  `patient_id` INT NULL,
   `acuity` INT NOT NULL,
   `reason_for_visit` VARCHAR(45) NOT NULL,
   `disposition` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`ed_visits_id`));
+  PRIMARY KEY (`ed_visits_id`),
+  FOREIGN KEY (`patient_id`) REFERENCE `patients` (`patient_id`),
+  FOREIGN KEY (`visit_id`) REFERENCE `visits` (`visit_id`),
+  );
 
   -- creating admission table --
 
-  CREATE TABLE `hospital_db`.`admissions` (
+  CREATE TABLE `admissions` (
   `admission_id` INT NOT NULL AUTO_INCREMENT,
-  `patient_id` INT NULL,
   `admission_date` DATE NOT NULL,
   `discharge_date` DATE NOT NULL,
   `service` VARCHAR(45) NOT NULL,
   `primary_diagnosis` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`admission_id`));
+  PRIMARY KEY (`admission_id`),
+  FOREIGN KEY (`patient_id`) REFERENCE `patients` (`patient_id`),
+  );
 
 --creating discharges table--
 
-  CREATE TABLE `hospital_db`.`discharges_table` (
-  `admisiion_id` INT 
-  `patient_id` INT ,
+  CREATE TABLE `discharges_table` (
   `discharge_date` DATE NOT NULL,
   `discharge_deposition` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`discharge_id`));
+  PRIMARY KEY (`discharge_id`),
+  FOREIGN KEY (`patient_id`) REFERENCE `patients` (`patient_id`),
+  FOREIGN KEY (`admission_id`) REFERENCE `admission` (`admission_id`),
+  );
 
